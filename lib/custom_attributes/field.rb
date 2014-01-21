@@ -1,7 +1,7 @@
 module CustomAttributes
 	
 	class Field < ActiveRecord::Base
-		self.table_name="custom_attribute_fields"
+	  self.table_name="custom_attribute_fields"
 	  belongs_to :custom_configurable, :polymorphic => true
 
 	  validates :custom_configurable_type, 

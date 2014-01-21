@@ -4,33 +4,48 @@ require 'active_record'
 module CustomAttributes
   module ClassMethods
   	def enable_custom_attribute_fields
-      has_many :custom_attribute_fields, :class_name=> CustomAttributes::Field, :as => :custom_configurable
+      has_many :custom_attribute_fields, :class_name=> CustomAttributes::Field, :as => :custom_configurable, :dependent=>:destroy
       include CustomAttributes::ConfigHolderInstanceMethods
     end
 
     def enable_custom_attributes(options={})
-    	has_many :custom_attribute_fields, :through => options[:config_holder]
-    	has_many :custom_attributes, :class_name=> CustomAttributes::Entry, :as => :custom_attributable
+        
+    	has_many :custom_attributes, 
+        :class_name=> CustomAttributes::Entry, 
+        :as => :custom_attributable, 
+        :dependent => :destroy
       accepts_nested_attributes_for :custom_attributes
-      #include CustomAttributes::AttributeHolderInstanceMethods
+
+      class_eval do 
+        def self.add_custom_attribute_fields(options)
+          define_method :custom_attribute_fields do
+            self.send(options[:config_holder]).custom_attribute_fields
+          end
+        end
+      end
+
+      add_custom_attribute_fields(options)
+
+      include CustomAttributes::AttributeHolderInstanceMethods
     end
+
   end
  
+  
   module ConfigHolderInstanceMethods
   	def has_custom_attribute_fields?
   		!self.custom_attribute_fields.empty?
   	end
   end
 
+  
   module AttributeHolderInstanceMethods
-    def self.included(included_class)
-      included_class.instance_eval do
-          # from here to the end of this block, imagine that you are in the class
-          # source itself. Add associations or instance methods, for example
-      end
+    def self.included(base)
+
     end
   end
  
+  
   def self.included(base)
     base.send :extend, ClassMethods
   end
@@ -43,3 +58,4 @@ end
 
 require "custom_attributes/field"
 require "custom_attributes/entry"
+require "custom_attributes/textfield"

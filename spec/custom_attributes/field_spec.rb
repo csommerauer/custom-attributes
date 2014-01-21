@@ -19,5 +19,15 @@ describe "CustomAttributes::Field" do
 		it "is not valid without belongs_to association" do
 			CustomAttributes::Field.create(:field_type=>"textarea", :name=>"whatever").should_not be_valid
 		end
-	end		
+	end
+
+	context "instance deletion" do
+		it "is destroyed when config_holder is destroyed" do
+			config_holder.custom_attribute_fields.create(:field_type=>"textarea",:name=>"whatever")
+			CustomAttributes::Field.count.should eq 1
+			config_holder.destroy
+			CustomAttributes::Field.count.should eq 0
+		end
+	end	
+
 end

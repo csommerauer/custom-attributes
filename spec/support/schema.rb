@@ -26,8 +26,14 @@ ActiveRecord::Schema.define do
   create_table :custom_attribute_entries, :force=>true do |t|
   	t.integer :custom_attributable_id
   	t.string :custom_attributable_type
-    t.string :value
+    t.integer :custom_value_id
+    t.string :custom_value_type
     t.integer :custom_attribute_field_id
   	t.timestamps
+  end
+
+  create_table :custom_attribute_textfields, :force=>true do |t|
+    t.string :value
+    t.timestamps
   end
 end
