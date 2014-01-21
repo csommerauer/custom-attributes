@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "CustomAttributes" do
 
-	let(:config_holder) { ConfigHolder.first }
+	let(:config_holder) { ConfigHolder.first }
 	let(:attr_holder) { AttributeHolder.first }
 
 	context "Configuration Holder" do
