@@ -8,7 +8,6 @@ module CustomAttributes
       desc "Move all the migrations to db/migrate"
 
       include Rails::Generators::Migration
-      binding.pry
       source_root File.expand_path("../templates", __FILE__)
       #def self.source_root
       #  @source_root ||= File.join(File.dirname(__FILE__), 'templates')
