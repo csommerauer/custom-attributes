@@ -9,7 +9,9 @@ module CustomAttributes
       include Rails::Generators::Migration
       source_root File.expand_path("../templates", __FILE__)
 
-      MIGRATIONS = ['create_entry_table']
+      MIGRATIONS = ['create_entries_table',
+        'create_fields_table',
+        'create_textfields_table']
 
       def create_migration_file
         MIGRATIONS.each do |migration_name|

@@ -1,7 +1,7 @@
-class CreateEntryTable < ActiveRecord::Migration
-   
-   def self.up
-		create_table :custom_attribute_entries, :force=>true do |t|
+class CreateEntriesTable < ActiveRecord::Migration
+
+  def self.up
+		create_table :custom_attribute_entries do |t|
 			t.integer :custom_attributable_id
 			t.string :custom_attributable_type
 			t.integer :custom_value_id
