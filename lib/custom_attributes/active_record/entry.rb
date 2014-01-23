@@ -6,7 +6,7 @@ module CustomAttributes
 	  belongs_to :custom_attributable, :polymorphic => true
 	  delegate :custom_attribute_fields, :to=> :custom_attributable, :prefix=>false
 
-	  belongs_to :custom_attribute_field, :class_name => CustomAttributes::Field
+	  belongs_to :custom_attribute_field, :class_name => "CustomAttributes::Field"
 	  delegate :name, :field_type, :to => :custom_attribute_field, :prefix => false
 
 	  belongs_to :custom_value, :polymorphic => true, :dependent => :destroy

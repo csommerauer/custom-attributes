@@ -34,6 +34,13 @@ describe "CustomAttributes::Entry" do
 			attr_holder.destroy
 			CustomAttributes::Entry.count.should eq 0
 		end
+
+		it "is deleted if if the custom_attribute_field is deleted" do
+			attr_holder.custom_attributes.create(:custom_attribute_field_id=>@custom_attribute.id)
+			CustomAttributes::Entry.count.should eq 1
+			@custom_attribute.destroy
+			CustomAttributes::Entry.count.should eq 0
+		end
 	end
 
 	context "methods" do
