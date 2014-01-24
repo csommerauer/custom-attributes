@@ -25,7 +25,18 @@ describe "CustomAttributes::Entry" do
 		it "is not valid if custom_attribute_field is not part of custom_attribute_fields of the :custom_attributable assiociation" do
 			attr_holder.custom_attributes.create(:custom_attribute_field_id=>99).should_not be_valid
 		end
-	end
+
+    it "can't be created twice for the same :custom_attribute_field_id" do
+      attr_holder.custom_attributes.create(:custom_attribute_field_id=>@custom_attribute.id).should be_valid
+      attr_holder.custom_attributes.create(:custom_attribute_field_id=>@custom_attribute.id).should_not be_valid
+    end
+
+    it "can be created for the same :custom_attribute_field_id for another attribute holder" do
+      attr_holder2 = AttributeHolder.create!(:title=>"something else", :config_holder_id=>attr_holder.config_holder_id )
+      attr_holder.custom_attributes.create(:custom_attribute_field_id=>@custom_attribute.id).should be_valid
+      attr_holder2.custom_attributes.create(:custom_attribute_field_id=>@custom_attribute.id).should be_valid
+    end
+ 	end
 
 	context "instance deletion" do
 		it "is deleted if the attr_holder is deleted" do

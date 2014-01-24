@@ -11,7 +11,8 @@ module CustomAttributes
 
 	  belongs_to :custom_value, :polymorphic => true, :dependent => :destroy
 	  delegate :value, :to=> :custom_value, :prefix => false
-	  accepts_nested_attributes_for :custom_value
+	  accepts_nested_attributes_for :custom_value, :reject_if=> proc { |attr| attr['id'].blank? && attr['value'].blank? }
+    default_scope includes(:custom_value)
 
 	  validates :custom_attribute_field_id,
 	  	:custom_attributable_id, :custom_attributable_type, :presence => true
@@ -20,20 +21,33 @@ module CustomAttributes
 	  	:in => ->(entry) { entry.custom_attribute_fields.map(&:id) },
 	  	:unless => ->(entry) { !entry.custom_attributable.present? }
 
+    validates_uniqueness_of :custom_attribute_field_id, :scope=>[:custom_attributable_id,:custom_attributable_type] 
+
+    attr_accessible :custom_attribute_field_id, :custom_value_attributes
+
+    def explicitly_build_custom_value
+      self.custom_value ||= return_custom_value_type.constantize.new()
+    end
+
 	  protected
 
   	def build_custom_value(params, assignment_options)
-  		raise ArgumentError, "Wrong custom_value_type for #{self.field_type}" unless validate_input
-    	self.custom_value = custom_value_type.constantize.new(params)
+  		#raise ArgumentError, "Wrong custom_value_type for #{self.field_type}" unless validate_input
+    	self.custom_value = return_custom_value_type.constantize.new(params)
   	end
 
   	private
-  	def validate_input
-  		if self.field_type == "textfield" && self.custom_value_type == "CustomAttributes::Textfield"
-  			true
-  		else
-  			false
-  		end
-  	end
+
+    def return_custom_value_type
+      CustomAttributes::Mapper::Configuration.custom_value_type(self.field_type)
+    end
+
+  	#def validate_input
+  	#	if self.field_type == "textfield" && self.custom_value_type == "CustomAttributes::Textfield"
+  	#		true
+  	#	else
+  	#		false
+  	#	end
+  	#end
 	end
 end

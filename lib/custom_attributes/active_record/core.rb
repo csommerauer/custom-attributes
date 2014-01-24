@@ -32,21 +32,27 @@ module CustomAttributes
   
   module ConfigHolderInstanceMethods
   	def has_custom_attribute_fields?
-  		!self.custom_attribute_fields.empty?
+  		!self.custom_attribute_fields.reload.empty?
   	end
   end
   
   module AttributeHolderInstanceMethods
     def self.included(base)
       def custom_attributes_configured?
-        !self.custom_attribute_fields.empty?
+        !self.custom_attribute_fields.reload.empty?
       end
 
       def custom_attributes_populate
         if custom_attributes_configured?
           existing_custom_attribute_fields = custom_attributes.map{| ca | ca.custom_attribute_field_id}
           custom_attribute_fields.each do |field|
-            custom_attributes.build(:custom_attribute_field_id=>field.id) unless  existing_custom_attribute_fields.include?(field.id)
+            if existing_custom_attribute_fields.include?(field.id)
+              custom_attributes[existing_custom_attribute_fields.index(field.id)].explicitly_build_custom_value
+            else
+              custom_attribute = custom_attributes.build(:custom_attribute_field_id=>field.id)
+              custom_attribute.explicitly_build_custom_value
+            end
+
           end 
         end
         

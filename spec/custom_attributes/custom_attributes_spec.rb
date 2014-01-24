@@ -22,11 +22,13 @@ describe "CustomAttributes" do
 			end
 
 			it "is true if more than 1 custom_attribute_fields are defined" do
-				config_holder.custom_attribute_fields.create(:name=>"something", :field_type => "textarea")
+				config_holder.custom_attribute_fields.create(:name=>"something", :field_type => "textfield")
 			  config_holder.has_custom_attribute_fields?.should eq true
 			end
 		end
 	end
+
+	
 
 	context "Attribute Holder" do
 		context "Class method #enable_custom_attributes" do
@@ -45,14 +47,14 @@ describe "CustomAttributes" do
 
 		context "custom_attribute_fields relationship" do
 			it "a custom_attribute_field of attr_holder is the same as from config_holder" do
-				custom_attribute = config_holder.custom_attribute_fields.create!(:name=>"testfield", :field_type=>"text_field")
+				custom_attribute = config_holder.custom_attribute_fields.create!(:name=>"testfield", :field_type=>"textfield")
 				attr_holder.custom_attribute_fields.first.should eq custom_attribute
 			end
 		end
 
 		context "saving entries using nested attributes" do
 			before :each do
-				@custom_attribute = config_holder.custom_attribute_fields.create!(:name=>"testfield", :field_type=>"text_field")
+				@custom_attribute = config_holder.custom_attribute_fields.create!(:name=>"testfield", :field_type=>"textfield")
 			end
 			it "works when updating a field" do
 				attr_holder.update_attributes(:custom_attributes_attributes => [
@@ -93,14 +95,36 @@ describe "CustomAttributes" do
 						cs.first.new_record?.should be_false
 					end
 
-					it "returns existing and creates new associations if not " do		
+					it "returns existing custom_attributes and creates new associations if not " do		
 						entry = attr_holder.custom_attributes.create(:custom_attribute_field_id=>@custom_attribute.id)
-						config_holder.custom_attribute_fields.create!(:name=>"testfield2", :field_type=>"text_field")
+						config_holder.custom_attribute_fields.create!(:name=>"testfield2", :field_type=>"textfield")
 						cs = attr_holder.custom_attributes_populate
 						cs.length.should eq 2
 						cs.first.should eql entry
 						cs.first.new_record?.should be_false
 						cs.last.new_record?.should be_true
+					end
+
+					it "new custom_attributes also have the custom_value set to a new instance" do
+						cs = attr_holder.custom_attributes_populate
+						cs.first.custom_value.class.to_s.should == "CustomAttributes::Textfield"
+						cs.first.custom_value.new_record?.should be_true
+					end	
+
+					it "existing custom_attributes also have the custom_value set to a new instance if not yet set" do
+						entry = attr_holder.custom_attributes.create(:custom_attribute_field_id=>@custom_attribute.id)
+						cs = attr_holder.custom_attributes_populate
+						cs.first.custom_value.class.to_s.should == "CustomAttributes::Textfield"
+						cs.first.custom_value.new_record?.should be_true
+					end
+
+					it "existing custom_attributes also have the custom_value set if " do
+						entry = attr_holder.custom_attributes.create!(
+							:custom_attribute_field_id=>@custom_attribute.id,
+							:custom_value_attributes=>{:value=>"something meaningful"})
+						cs = attr_holder.custom_attributes_populate
+						cs.first.custom_value.class.to_s.should == "CustomAttributes::Textfield"
+						cs.first.custom_value.new_record?.should be_false
 					end
 
 				end

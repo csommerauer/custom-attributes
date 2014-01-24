@@ -36,4 +36,14 @@ ActiveRecord::Schema.define do
     t.string :value
     t.timestamps
   end
+
+  create_table :custom_attribute_textareas, :force=>true do |t|
+    t.text :value
+    t.timestamps
+  end
+
+  create_table :custom_attribute_datefields, :force=>true do |t|
+    t.date :value
+    t.timestamps
+  end
 end

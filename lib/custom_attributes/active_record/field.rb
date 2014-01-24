@@ -11,6 +11,8 @@ module CustomAttributes
 			:field_type,
 			:presence =>true
 
+		validates_inclusion_of :field_type,  :in => CustomAttributes::Mapper::Configuration.available_fields
+
 		attr_accessible :name, :field_type, :position, :mandatory, :error_message  
 		
 	end
