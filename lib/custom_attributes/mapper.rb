@@ -18,10 +18,14 @@ module CustomAttributes
 
     module ViewHelpers
       def form_element_custom_value(form,form_type,options)
-        case form_type
-        when "textfield" then form.text_field :value, {:"data-custom-attribute-type"=>"string"}.merge(options[:input_options] || nil)
-        when "datefield" then form.text_field :value, {:"data-custom-attribute-type"=>"date"}.merge(options[:input_options] || nil)
-        when "textarea"  then form.text_area :value,  {:"data-custom-attribute-type"=>"text"}.merge(options[:input_options] || nil)
+        if self.public_methods.include?(:"custom_attribute_#{form_type}")
+          self.send(:"custom_attribute_#{form_type}", form, options)
+        else
+          case form_type
+          when "textfield" then form.text_field :value, {:"data-custom-attribute-type"=>"string"}.merge(options[:input_options] || nil)
+          when "datefield" then form.text_field :value, {:"data-custom-attribute-type"=>"date"}.merge(options[:input_options] || nil)
+          when "textarea"  then form.text_area :value,  {:"data-custom-attribute-type"=>"text"}.merge(options[:input_options] || nil)
+          end
         end
       end
     end 
