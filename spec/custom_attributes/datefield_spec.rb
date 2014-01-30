@@ -30,5 +30,12 @@ describe "CustomAttributes::Datefield" do
 			 attr_holder.custom_attributes.create!(:custom_attribute_field_id=>@custom_field.id, :custom_value_attributes=>{:value=>"xxxyyy"}) 
 			}.to raise_error
 		end
-	end	
+	end
+
+	context "instance deletion"	do
+		it "should be delete if entry is deleted" do
+			entry = attr_holder.custom_attributes.create(:custom_attribute_field_id=>@custom_field.id, :custom_value_attributes=>{:value=>"22/12/2013"})
+			expect {entry.destroy}.to change CustomAttributes::Datefield, :count
+		end
+	end
 end

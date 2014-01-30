@@ -27,10 +27,7 @@ describe "CustomAttributes::Textfield" do
 	context "instance deletion" do
 		it "should be delete if entry is deleted" do
 			entry = attr_holder.custom_attributes.create(:custom_attribute_field_id=>@custom_field.id, :custom_value_attributes=>{:value=>"textfield"})
-			CustomAttributes::Textfield.count.should eq 1
-			entry.destroy
-			CustomAttributes::Textfield.count.should eq 0
-
+			expect {entry.destroy}.to change CustomAttributes::Textfield, :count
 		end
 	end	
 end

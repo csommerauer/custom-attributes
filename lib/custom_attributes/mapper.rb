@@ -4,7 +4,8 @@ module CustomAttributes
       Map = {
         "textfield" => "CustomAttributes::Textfield",
         "textarea" => "CustomAttributes::Textarea",
-        "datefield" => "CustomAttributes::Datefield"
+        "datefield" => "CustomAttributes::Datefield",
+        "filefield" => "CustomAttributes::Filefield"
       }
 
       def self.available_fields

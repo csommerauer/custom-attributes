@@ -11,7 +11,8 @@ module CustomAttributes
 
 	  belongs_to :custom_value, :polymorphic => true, :dependent => :destroy
 	  delegate :value, :to=> :custom_value, :prefix => false
-	  accepts_nested_attributes_for :custom_value, :reject_if=> proc { |attr| attr['id'].blank? && attr['value'].blank? }
+	  accepts_nested_attributes_for :custom_value, 
+      :reject_if=> proc { |attr|  attr['id'].blank? && attr['value'].blank? && attr['attachment'].blank? }
     default_scope includes(:custom_value)
 
 	  validates :custom_attribute_field_id,
@@ -33,7 +34,7 @@ module CustomAttributes
 
   	def build_custom_value(params, assignment_options)
   		#raise ArgumentError, "Wrong custom_value_type for #{self.field_type}" unless validate_input
-    	self.custom_value = return_custom_value_type.constantize.new(params)
+      self.custom_value = return_custom_value_type.constantize.new(params)
   	end
 
   	private

@@ -2,6 +2,9 @@ require 'custom_attributes'
 require 'database_cleaner'
 require 'pry'
 
+RSPEC_ROOT = File.dirname(__FILE__)
+PAPERCLIP_PATH = "#{RSPEC_ROOT}/support/temp/:id_:filename"
+
 RSpec.configure do |config|
 
 	ActiveRecord::Base.establish_connection(
@@ -11,6 +14,7 @@ RSpec.configure do |config|
 	load File.dirname(__FILE__) + '/support/schema.rb'
 	load File.dirname(__FILE__) + '/support/models.rb'
 	load File.dirname(__FILE__) + '/support/data.rb'
+
   #your other config
 
   config.before(:suite) do
@@ -25,5 +29,4 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
 
   end
-
 end

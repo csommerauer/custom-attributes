@@ -6,7 +6,9 @@ module CustomAttributes
     class InstallGenerator < Rails::Generators::Base
 
       desc "Move all the migrations to db/migrate"
+      
       include Rails::Generators::Migration
+      
       source_root File.expand_path("../templates", __FILE__)
 
       MIGRATIONS = [
@@ -14,7 +16,8 @@ module CustomAttributes
         'create_custom_attributes_fields_table',
         'create_custom_attributes_textfields_table',
         'create_custom_attributes_textareas_table',
-        'create_custom_attributes_datefields_table'
+        'create_custom_attributes_datefields_table',
+        'create_custom_attributes_filefields_paperclip_table'
       ]
 
       def create_migration_file
