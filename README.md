@@ -1,4 +1,5 @@
 # CustomAttributes
+[![Code Climate](https://codeclimate.com/github/csommerauer/custom-attributes.png)](https://codeclimate.com/github/csommerauer/custom-attributes)
 
 CustomAttributes allows a model to have different attributes depending on the instance of a belongs_to association. I.e.
 
