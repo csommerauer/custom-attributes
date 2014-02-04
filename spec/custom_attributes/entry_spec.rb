@@ -39,35 +39,43 @@ describe "CustomAttributes::Entry" do
  	end
 
 	context "instance deletion" do
-		it "is deleted if the attr_holder is deleted" do
+		before :each do
 			attr_holder.custom_attributes.create(:custom_attribute_field_id=>@custom_attribute.id)
-			CustomAttributes::Entry.count.should eq 1
-			attr_holder.destroy
-			CustomAttributes::Entry.count.should eq 0
 		end
 
-		it "is deleted if if the custom_attribute_field is deleted" do
-			attr_holder.custom_attributes.create(:custom_attribute_field_id=>@custom_attribute.id)
-			CustomAttributes::Entry.count.should eq 1
-			@custom_attribute.destroy
-			CustomAttributes::Entry.count.should eq 0
+		it "is deleted if the attr_holder is deleted" do
+			expect { attr_holder.destroy }.to change{ CustomAttributes::Entry.count}.from(1).to(0)
+		end
+
+		it "is deleted if the custom_attribute_field is deleted" do
+			expect { @custom_attribute.destroy }.to change{ CustomAttributes::Entry.count}.from(1).to(0) 
+		end
+
+		it "can be deleted through the attr_holder" do
+			expect { attr_holder.update_attributes( :custom_attributes_attributes => {
+				:"0" => {
+					:id => attr_holder.custom_attributes.first.id, 
+					:_destroy => 1 } 
+				}) 
+			}.to change{ CustomAttributes::Entry.count}.from(1).to(0)
 		end
 	end
 
 	context "methods" do
+		before :each do
+			@entry = attr_holder.custom_attributes.create(:custom_attribute_field_id=>@custom_attribute.id)
+		end
+
 		it "#custom_attribute_fields method that returns the available fields" do
-			entry = attr_holder.custom_attributes.create(:custom_attribute_field_id=>@custom_attribute.id)
-			entry.custom_attribute_fields.first.should eq  @custom_attribute
+			@entry.custom_attribute_fields.first.should eq  @custom_attribute
 		end	
 
 		it "#name returns the custom_attribute_field name" do
-			entry = attr_holder.custom_attributes.create(:custom_attribute_field_id=>@custom_attribute.id)
-			entry.name.should == @custom_attribute.name
+			@entry.name.should == @custom_attribute.name
 		end
 
 		it "#field_type returns the custom_attribute_field field_type" do
-			entry = attr_holder.custom_attributes.create(:custom_attribute_field_id=>@custom_attribute.id)
-			entry.field_type.should == @custom_attribute.field_type
+			@entry.field_type.should == @custom_attribute.field_type
 		end
 
 		it "#value returns the custom_value value" do

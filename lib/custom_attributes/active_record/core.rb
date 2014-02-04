@@ -12,7 +12,7 @@ module CustomAttributes
         :as => :custom_attributable, 
         :dependent => :destroy
 
-      accepts_nested_attributes_for :custom_attributes
+      accepts_nested_attributes_for :custom_attributes, :allow_destroy=> true
       attr_accessible :custom_attributes_attributes
 
       class_eval do 

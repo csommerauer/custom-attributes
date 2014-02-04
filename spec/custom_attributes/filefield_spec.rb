@@ -19,11 +19,6 @@ describe "CustomAttributes::Filefield" do
 			expect { 
 				attr_holder.custom_attributes.create!(:custom_attribute_field_id=>@custom_field.id, :custom_value_attributes=>{:attachment=>@file}) 
 				}.to change CustomAttributes::Filefield, :count
-
-			#entry = attr_holder.custom_attributes.create(:custom_attribute_field_id=>@custom_field.id, :custom_value_attributes=>{:attachment=>@file})
-
-			#expect {entry.custom_value(true) }.to_not eq nil
-			#entry.custom_value(true).id.should_not == nil
 		end
 
 	end	

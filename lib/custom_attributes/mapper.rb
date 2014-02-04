@@ -23,9 +23,15 @@ module CustomAttributes
           self.send(:"custom_attribute_#{form_type}", form, options)
         else
           case form_type
-          when "textfield" then form.text_field :value, {:"data-custom-attribute-type"=>"string"}.merge(options[:input_options] || nil)
-          when "datefield" then form.text_field :value, {:"data-custom-attribute-type"=>"date"}.merge(options[:input_options] || nil)
-          when "textarea"  then form.text_area :value,  {:"data-custom-attribute-type"=>"text"}.merge(options[:input_options] || nil)
+          when "textfield" then form.text_field :value, {:"data-custom-attribute-type"=>"string"}.merge(options[:input_options] || {})
+          when "datefield" then form.text_field :value, {:"data-custom-attribute-type"=>"date"}.merge(options[:input_options] || {})
+          when "textarea"  then form.text_area :value,  {:"data-custom-attribute-type"=>"text"}.merge(options[:input_options] || {})
+          when "filefield" 
+            if form.object.new_record?
+              form.file_field :attachment, {:"data-custom-attribute-type"=>"file"}.merge(options[:input_options] || {})
+            else
+              link_to form.object.attachment_file_name, form.object.attachment.try(:url), :target => :blank
+            end
           end
         end
       end
