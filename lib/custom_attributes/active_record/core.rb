@@ -49,14 +49,18 @@ module CustomAttributes
             if existing_custom_attribute_fields.include?(field.id)
               custom_attributes[existing_custom_attribute_fields.index(field.id)].explicitly_build_custom_value
             else
-              custom_attribute = custom_attributes.build(:custom_attribute_field_id=>field.id)
-              custom_attribute.explicitly_build_custom_value
+              build_new_custom_attribute(field.id)
             end
-
           end 
         end
         
         return custom_attributes
+      end
+
+      def build_new_custom_attribute(field_id)
+        custom_attribute = custom_attributes.build(:custom_attribute_field_id=>field_id)
+        custom_attribute.explicitly_build_custom_value
+        custom_attribute
       end
     end
   end

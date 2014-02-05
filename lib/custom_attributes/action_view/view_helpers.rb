@@ -1,43 +1,87 @@
 module CustomAttributes
 	module ViewHelpers
 
-    def fields_for_custom_attributes(form, options={})
-      form.fields_for :custom_attributes, form.object.custom_attributes_populate do |inner_form|
-        if inner_form.object.field_type == "filefield"
-          field_for_custom_file_field_attributes(inner_form, options)
-        else          
-          field_for_custom_attribute(inner_form, options)
-        end
+    #def fields_for_custom_attributes(form, options={})
+    #  form.fields_for :custom_attributes, form.object.custom_attributes_populate do |inner_form|
+    #    if inner_form.object.field_type == "filefield"
+    #      field_for_custom_filefield_attributes(inner_form, options)
+    #    else          
+    #      field_for_custom_attribute(inner_form, options)
+    #    end
+    #  end
+    #end
+
+    def fields_for_custom_attributes(outer_form, &block)
+      @outer_form = outer_form
+      @outer_form.fields_for :custom_attributes, @outer_form.object.custom_attributes_populate do |inner_form|
+        @inner_form = inner_form
+        yield
       end
     end
 
-    def field_for_custom_attribute(form, options={})
-      %Q{ <div class="#{options[:div_class] || nil}">
-            #{form.hidden_field :custom_attribute_field_id}
-            #{fields_for_custom_value(form, options)}
-          </div>
-        }.html_safe
+    def custom_attribute_is_a?(field_type)
+      field_type == @inner_form.object.field_type
     end
 
-    def field_for_custom_file_field_attributes(form, options={})
-      %Q{ <div class="#{options[:div_class] || nil}">
-            #{form.hidden_field :custom_attribute_field_id}
-            #{fields_for_custom_value(form, options)}
-            #{file_field_delete_checkbox(form,options)}
-          </div>
-        }.html_safe
+    #def field_for_custom_attribute(form, options={})
+    #  content_tag :div, :class=>(options[:div_class] || nil) do
+    #    form.hidden_field(:custom_attribute_field_id) + 
+    #    fields_for_custom_value(form, options)
+    #  end.html_safe
+    #end
+
+    def single_custom_attribute_field_tag(object, field_id,options={})
+      fields_for :"#{object.class.to_s.underscore}[custom_attributes_attributes][#{(Time.now.to_f * 1000).to_i}]", object.build_new_custom_attribute(field_id) do |inner_form|
+          @inner_form = inner_form
+          custom_attribute_field_tag(options)
+      end
     end
 
-    def file_field_delete_checkbox(form,options={})
-      %Q{#{form.check_box(:_destroy, options[:input_options] || {}) unless form.object.custom_value.new_record?}}.html_safe
-    end 
+    def custom_attribute_field_tag(options={})
+      content_tag :div, :"data-custom-attribute-id"=>@inner_form.object.id do
+        @inner_form.hidden_field(:custom_attribute_field_id) + 
+        custom_attribute_custom_value_tag(@inner_form, options)
+      end.html_safe
+    end
 
-    def fields_for_custom_value(form, options={})
+    def custom_attribute_label_tag(options={})
+      @inner_form.fields_for :custom_value, @inner_form.object.custom_value do |iform|
+        iform.label(:value, @inner_form.object.custom_attribute_field.name, options)
+      end
+    end
+
+    def custom_attribute_custom_value_tag(form, options={})
       form.fields_for :custom_value, form.object.custom_value do |iform|
-        %Q{ #{iform.label :value, form.object.custom_attribute_field.name, :class=> (options[:label_class] || nil)}
-            #{form_element_custom_value(iform,form.object.custom_attribute_field.field_type, options)}
-        }.html_safe
-      end
+        @core_form = iform
+        if custom_attribute_is_a?("filefield")
+          form_element_custom_value_filefield(iform, options)
+        else
+          form_element_custom_value(iform,form.object.custom_attribute_field.field_type, options)
+        end
+      end.html_safe
+    end
+
+    #def fields_for_custom_value(form, options={})
+    #  form.fields_for :custom_value, form.object.custom_value do |iform|
+    #    iform.label(:value, form.object.custom_attribute_field.name, :class=> (options[:label_class] || nil)) +
+    #    form_element_custom_value(iform,form.object.custom_attribute_field.field_type, options)
+    #  end.html_safe
+    #end
+
+    #def field_for_custom_filefield_attributes(form, options={})
+    # content_tag :div, :class=>(options[:div_class] || nil) do
+    #   form.hidden_field(:custom_attribute_field_id) + 
+    #   fields_for_custom_value_filefield(form, options) +
+    #   (filefield_delete_checkbox(form,options) unless form.object.custom_value.new_record?)
+    # end.html_safe
+    #form_element_custom_value_filefield
+
+    def filefield_delete_checkbox(options={})
+      if self.public_methods.include?(:custom_attribute_filefield_delete)
+        self.send(:custom_attribute_filefield_delete, @inner_form, options)
+      else
+        @inner_form.check_box(:_destroy, options)
+      end unless @core_form.object.new_record?
     end
     
 	end
