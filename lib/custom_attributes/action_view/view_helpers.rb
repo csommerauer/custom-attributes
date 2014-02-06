@@ -19,6 +19,13 @@ module CustomAttributes
       end
     end
 
+    def field_for_custom_attribute(object, field, &block)
+      fields_for :"#{object.class.to_s.underscore.gsub('/','_')}[custom_attributes_attributes][#{(Time.now.to_f * 1000).to_i}]", object.build_new_custom_attribute(field.id) do |inner_form|
+          @inner_form = inner_form
+          yield
+      end
+    end
+
     def custom_attribute_is_a?(field_type)
       field_type == @inner_form.object.field_type
     end
@@ -45,8 +52,8 @@ module CustomAttributes
     end
 
     def custom_attribute_label_tag(options={})
-      @inner_form.fields_for :custom_value, @inner_form.object.custom_value do |iform|
-        iform.label(:value, @inner_form.object.custom_attribute_field.name, options)
+      @inner_form.fields_for(:custom_value, @inner_form.object.custom_value, :include_id => false) do |iform|
+        iform.label(custom_attribute_is_a?("filefield") ? :attachment : :value, @inner_form.object.custom_attribute_field.name, options)
       end
     end
 
