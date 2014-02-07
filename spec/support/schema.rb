@@ -7,29 +7,29 @@ ActiveRecord::Schema.define do
   end
 
   create_table :attribute_holders, :force => true do |t|
-  	t.integer :config_holder_id
+    t.integer :config_holder_id
     t.string :text
     t.timestamps
   end
 
   create_table :custom_attribute_fields, :force=>true do |t|
-  	t.string :name
-  	t.string :field_type
-  	t.boolean :mandatory, :default => false
-  	t.string :error_message
-  	t.integer :position
-  	t.integer :custom_configurable_id
-  	t.string :custom_configurable_type
-  	t.timestamps
+    t.string :name
+    t.string :field_type
+    t.boolean :mandatory, :default => false
+    t.string :error_message
+    t.integer :position
+    t.integer :custom_configurable_id
+    t.string :custom_configurable_type
+    t.timestamps
   end
 
   create_table :custom_attribute_entries, :force=>true do |t|
-  	t.integer :custom_attributable_id
-  	t.string :custom_attributable_type
+    t.integer :custom_attributable_id
+    t.string :custom_attributable_type
     t.integer :custom_value_id
     t.string :custom_value_type
     t.integer :custom_attribute_field_id
-  	t.timestamps
+    t.timestamps
   end
 
   create_table :custom_attribute_textfields, :force=>true do |t|

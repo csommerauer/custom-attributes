@@ -1,13 +1,13 @@
 module CustomAttributes
   module ClassMethods
-  	def enable_custom_attribute_fields
+    def enable_custom_attribute_fields
       has_many :custom_attribute_fields, :class_name=> CustomAttributes::Field, :as => :custom_configurable, :dependent=>:destroy
       include CustomAttributes::ConfigHolderInstanceMethods
     end
 
     def enable_custom_attributes(options={})
         
-    	has_many :custom_attributes, 
+      has_many :custom_attributes, 
         :class_name=> CustomAttributes::Entry, 
         :as => :custom_attributable, 
         :dependent => :destroy
@@ -31,9 +31,9 @@ module CustomAttributes
   end
   
   module ConfigHolderInstanceMethods
-  	def has_custom_attribute_fields?
-  		!self.custom_attribute_fields.reload.empty?
-  	end
+    def has_custom_attribute_fields?
+      !self.custom_attribute_fields.reload.empty?
+    end
   end
   
   module AttributeHolderInstanceMethods

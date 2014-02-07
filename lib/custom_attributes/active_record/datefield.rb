@@ -1,9 +1,9 @@
 module CustomAttributes
-	
-	class Datefield < ActiveRecord::Base
-	  self.table_name="custom_attribute_datefields"
+  
+  class Datefield < ActiveRecord::Base
+    self.table_name="custom_attribute_datefields"
 
-		has_one :entry, :class_name=>CustomAttributes::Entry, :as => :custom_value
+    has_one :entry, :class_name=>CustomAttributes::Entry, :as => :custom_value
 
     validate :is_valid_date
 
@@ -15,5 +15,5 @@ module CustomAttributes
       end
     end
 
-	end
+  end
 end
