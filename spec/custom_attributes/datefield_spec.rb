@@ -11,7 +11,7 @@ describe "CustomAttributes::Datefield" do
   context "instance creation" do
 
     it "should be valid with a valid has_one association that represents a textfield" do
-      entry = attr_holder.custom_attributes.create(:custom_attribute_field_id=>@custom_field.id, :custom_value_attributes=>{:value=>"22/12/2013"})
+      entry = attr_holder.custom_attributes.create!(:custom_attribute_field_id=>@custom_field.id, :custom_value_attributes=>{:value=>"22/12/2013"})
       expect {entry.custom_value(true) }.to_not eq nil
       entry.custom_value(true).id.should_not == nil
     end

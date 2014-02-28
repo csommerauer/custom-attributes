@@ -11,30 +11,35 @@ module CustomAttributes
 
     belongs_to :custom_value, :polymorphic => true, :dependent => :destroy
     delegate :value, :to=> :custom_value, :prefix => false
+    
     accepts_nested_attributes_for :custom_value, 
       :reject_if=> proc { |attr|  attr['id'].blank? && attr['value'].blank? && attr['attachment'].blank? }
     default_scope includes(:custom_value)
 
-    validates :custom_attribute_field_id,
-      :custom_attributable_id, :custom_attributable_type, :presence => true
+    # VALIDATIONS
+    validates :custom_attribute_field_id, :custom_attributable, :presence=>:true
+
+    #  :custom_attributable_id, :custom_attributable_type, :presence => true
 
     validates_inclusion_of :custom_attribute_field_id, 
       :in => ->(entry) { entry.custom_attribute_fields.map(&:id) },
       :unless => ->(entry) { !entry.custom_attributable.present? }
 
-    validates_uniqueness_of :custom_attribute_field_id, :scope=>[:custom_attributable_id,:custom_attributable_type] 
+    validates_uniqueness_of :custom_attribute_field_id, :scope=>[:custom_attributable_id,:custom_attributable_type]
+    # VALIDATIONS
 
     attr_accessible :custom_attribute_field_id, :custom_value_attributes
 
     def explicitly_build_custom_value
-      self.custom_value ||= return_custom_value_type.constantize.new()
+      self.custom_value ||= build_custom_value({},{})
     end
 
     protected
 
     def build_custom_value(params, assignment_options)
-      #raise ArgumentError, "Wrong custom_value_type for #{self.field_type}" unless validate_input
       self.custom_value = return_custom_value_type.constantize.new(params)
+      self.custom_value.entry = self
+      self.custom_value
     end
 
     private
@@ -45,3 +50,4 @@ module CustomAttributes
 
   end
 end
+

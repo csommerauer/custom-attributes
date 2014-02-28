@@ -5,6 +5,20 @@ module CustomAttributes
       include CustomAttributes::ConfigHolderInstanceMethods
     end
 
+    def enable_custom_attribute_custom_value
+      enable_custom_attribute_custom_value_base      
+      attr_accessible :value
+
+      after_validation :handle_entry_errors, :on => :create
+
+      include CustomAttributes::CustomValueInstanceMethods
+    end
+
+    def enable_custom_attribute_custom_value_base
+      has_one :entry, :class_name=>::CustomAttributes::Entry, :as => :custom_value
+      validates :entry, :associated=>true, :presence=> true, :on => :create
+    end
+
     def enable_custom_attributes(options={})
         
       has_many :custom_attributes, 
@@ -24,12 +38,19 @@ module CustomAttributes
       end
 
       add_custom_attribute_fields(options)
-      attr_accessible :custom_attributes_attributes
 
       include CustomAttributes::AttributeHolderInstanceMethods
     end
   end
   
+  module CustomValueInstanceMethods
+    def handle_entry_errors
+      if entry && !entry.valid_attribute?(:custom_attribute_field_id)
+        errors.add(:value, "the entry is not valid")
+      end
+    end
+  end  
+
   module ConfigHolderInstanceMethods
     def has_custom_attribute_fields?
       !self.custom_attribute_fields.reload.empty?
@@ -57,6 +78,12 @@ module CustomAttributes
         return custom_attributes
       end
 
+      def custom_attribute_or_build(field)
+        custom_attribute = custom_attributes.find_by_custom_attribute_field_id(field.id) || custom_attributes.build(:custom_attribute_field_id=>field.id)
+        custom_attribute.explicitly_build_custom_value
+        custom_attribute 
+      end
+
       def build_new_custom_attribute(field_id)
         custom_attribute = custom_attributes.build(:custom_attribute_field_id=>field_id)
         custom_attribute.explicitly_build_custom_value
@@ -73,4 +100,10 @@ end
 
 class ActiveRecord::Base
   include CustomAttributes
+
+  def valid_attribute?(attribute_name)
+    self.valid?
+    self.errors.messages.delete_if {|k,v| k != attribute_name }
+    self.errors[attribute_name].blank?
+  end
 end

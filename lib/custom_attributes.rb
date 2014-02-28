@@ -11,4 +11,6 @@ require "custom_attributes/active_record/textarea"
 require "custom_attributes/active_record/datefield"
 require "custom_attributes/active_record/filefield"
 
+require "custom_attributes/action_view/form_builder_extensions"
+
 require 'custom_attributes/railtie' if defined?(Rails)
