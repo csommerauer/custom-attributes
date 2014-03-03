@@ -24,7 +24,7 @@ module ActionView
       end
 
       def field_for_custom_attribute(field,options={}, &block)
-        self.fields_for :custom_attributes, self.object.custom_attribute_or_build(field), {:child_index=>(Time.now.to_f * 1000).to_i} do |f|
+        self.fields_for :custom_attributes, self.object.custom_attribute_or_build(field), {:include_id => false, :child_index=>(Time.now.to_f * 1000).to_i} do |f|
           yield(f)
         end
       end

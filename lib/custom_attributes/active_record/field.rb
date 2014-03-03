@@ -1,7 +1,7 @@
 module CustomAttributes
   
   class Field < ActiveRecord::Base
-  self.table_name="custom_attribute_fields"
+    self.table_name="custom_attribute_fields"
     belongs_to :custom_configurable, :polymorphic => true
     has_many :custom_attribute_entries, :class_name => "CustomAttributes::Entry", :foreign_key=> :custom_attribute_field_id, :dependent=> :destroy
 
@@ -12,7 +12,7 @@ module CustomAttributes
 
     validates_inclusion_of :field_type,  :in => CustomAttributes::Mapper::Configuration.available_fields
 
-    attr_accessible :name, :field_type, :position, :mandatory, :error_message   
+    attr_accessible :name, :field_type, :position, :error_message, :required  
   end
 
 end

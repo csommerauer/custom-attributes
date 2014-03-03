@@ -5,11 +5,14 @@ module CustomAttributes
       include CustomAttributes::ConfigHolderInstanceMethods
     end
 
-    def enable_custom_attribute_custom_value
-      enable_custom_attribute_custom_value_base      
+    def enable_custom_attribute_custom_value      
       attr_accessible :value
 
       after_validation :handle_entry_errors, :on => :create
+
+      validates :value, :presence =>true, :if => "entry.present? && entry.required"
+      
+      enable_custom_attribute_custom_value_base
 
       include CustomAttributes::CustomValueInstanceMethods
     end
@@ -18,6 +21,7 @@ module CustomAttributes
       has_one :entry, :class_name=>::CustomAttributes::Entry, :as => :custom_value
       validates :entry, :associated=>true, :presence=> true, :on => :create
     end
+
 
     def enable_custom_attributes(options={})
         
@@ -43,6 +47,7 @@ module CustomAttributes
     end
   end
   
+
   module CustomValueInstanceMethods
     def handle_entry_errors
       if entry && !entry.valid_attribute?(:custom_attribute_field_id)
