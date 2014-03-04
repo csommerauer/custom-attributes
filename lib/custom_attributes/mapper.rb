@@ -3,6 +3,7 @@ module CustomAttributes
     class Configuration
       Map = {
         "textfield" => "CustomAttributes::Textfield",
+        "country_select" => "CustomAttributes::Textfield",
         "textarea" => "CustomAttributes::Textarea",
         "datefield" => "CustomAttributes::Datefield",
         "filefield" => "CustomAttributes::Filefield"

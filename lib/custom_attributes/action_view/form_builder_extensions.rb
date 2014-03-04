@@ -48,9 +48,10 @@ module ActionView
           @template.send(:"custom_attribute_#{form_type}", self, options)
         else
           case form_type
-          when "textfield" then self.text_field :value, {:"data-custom-attribute-type"=>"string"}.merge(options)
-          when "datefield" then self.text_field :value, {:"data-custom-attribute-type"=>"date"}.merge(options)
-          when "textarea"  then self.text_area :value,  {:"data-custom-attribute-type"=>"text"}.merge(options)
+          when "textfield"      then self.text_field :value, {:"data-custom-attribute-type"=>"string"}.merge(options)
+          when "datefield"      then self.text_field :value, {:"data-custom-attribute-type"=>"date"}.merge(options)
+          when "textarea"       then self.text_area :value,  {:"data-custom-attribute-type"=>"text"}.merge(options)
+          when "country_select" then self.country_select :value, ["Select your country"], {:"data-custom-attribute-type"=>"text"}.merge(options)
           end
         end
       end

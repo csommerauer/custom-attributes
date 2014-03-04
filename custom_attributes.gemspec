@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'rails', ['>= 3', '<4']
   spec.add_dependency 'paperclip'
+  spec.add_dependency 'country_select', '>1.2.0'
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"

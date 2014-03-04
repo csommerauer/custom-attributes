@@ -1,4 +1,5 @@
 require 'custom_attributes/action_view/view_helpers'
+require 'country_select'
 
 module CustomAttributes
   class Railtie < Rails::Railtie	
