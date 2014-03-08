@@ -10,7 +10,7 @@ module CustomAttributes
     delegate :name, :field_type, :required, :to => :custom_attribute_field, :prefix => false
 
     belongs_to :custom_value, :polymorphic => true, :dependent => :destroy
-    delegate :value, :to=> :custom_value, :prefix => false
+    #delegate :value, :to=> :custom_value, :prefix => false
     
     accepts_nested_attributes_for :custom_value, :update_only =>true
     default_scope includes(:custom_value)
@@ -31,6 +31,14 @@ module CustomAttributes
 
     def explicitly_build_custom_value
       self.custom_value ||= build_custom_value({},{})
+    end
+
+    def value
+      if field_type == "filefield"
+        custom_value.attachment
+      else
+        custom_value.value
+      end
     end
 
     protected

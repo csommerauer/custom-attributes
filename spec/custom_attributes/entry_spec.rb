@@ -78,12 +78,24 @@ describe "CustomAttributes::Entry" do
       @entry.field_type.should == @custom_attribute.field_type
     end
 
-    it "#value returns the custom_value value" do
-      entry = attr_holder.custom_attributes.create(:custom_attribute_field_id=>@custom_attribute.id,
-        :custom_value_type=>"CustomAttributes::Textfield", 
-        :custom_value_attributes=>{:value=>"something meaningful"})
-      entry.value.should == "something meaningful"
-    end   
+    context "#value" do
+      it "returns the custom_value value" do
+        entry = attr_holder.custom_attributes.create(:custom_attribute_field_id=>@custom_attribute.id,
+          :custom_value_type=>"CustomAttributes::Textfield", 
+          :custom_value_attributes=>{:value=>"something meaningful"})
+        entry.value.should == "something meaningful"
+      end
+
+      it "returns the custom_value attachemnt for filefield" do
+        Paperclip::Attachment.default_options[:path] = PAPERCLIP_PATH
+        custom_attribute = config_holder.custom_attribute_fields.create!(:name=>"testfield", :field_type=>"filefield")
+        entry = attr_holder.custom_attributes.create!(:custom_attribute_field_id=>custom_attribute.id,
+          :custom_value_type=>"CustomAttributes::Filefield", 
+          :custom_value_attributes=>{:attachment=>File.new("#{RSPEC_ROOT}/fixtures/files/car.jpg")})
+        expect(entry.value).to be_instance_of Paperclip::Attachment 
+      end      
+    end
+
 
   end   
 end
