@@ -30,7 +30,12 @@ module CustomAttributes
     attr_accessible :custom_attribute_field_id, :custom_value_attributes
 
     def explicitly_build_custom_value
-      self.custom_value ||= build_custom_value({},{})
+      if self.custom_value
+        self.custom_value.entry = self
+        self.custom_value
+      else
+        build_custom_value({},{})
+      end
     end
 
     def value

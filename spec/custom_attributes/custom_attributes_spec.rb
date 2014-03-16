@@ -127,9 +127,7 @@ describe "CustomAttributes" do
             cs.first.custom_value.new_record?.should be_false
           end
         end
-      end
-
-      
+      end  
     end
   end
 

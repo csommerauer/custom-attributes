@@ -83,6 +83,16 @@ module CustomAttributes
         return custom_attributes
       end
 
+      def required_custom_attributes_persisted_and_valid?
+        prepop_custom_attributes = custom_attributes_populate
+        return true unless prepop_custom_attributes.inject(true) { |valid, ca| valid = valid && ca.required }
+        prepop_custom_attributes.inject(true) do |valid, ca|
+          valid = (valid && !ca.custom_value.nil? && !ca.custom_value.new_record? && !ca.new_record? && ca.valid? ) if ca.required
+          break false unless valid
+          valid
+        end
+      end
+
       def custom_attribute_or_build(field)
         custom_attribute = custom_attributes.find_by_custom_attribute_field_id(field.id) || custom_attributes.build(:custom_attribute_field_id=>field.id)
         custom_attribute.explicitly_build_custom_value

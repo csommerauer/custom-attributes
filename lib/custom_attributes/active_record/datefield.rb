@@ -1,5 +1,4 @@
-module CustomAttributes
-  
+module CustomAttributes  
   class Datefield < ActiveRecord::Base
     self.table_name="custom_attribute_datefields"
 
@@ -9,6 +8,7 @@ module CustomAttributes
     private 
 
     def is_valid_date
+      return true if value.nil?
       if !value.instance_of?(Date) && ((Date.parse(value) rescue ArgumentError) == ArgumentError)
         errors.add(:value, 'must be a valid date')
       end

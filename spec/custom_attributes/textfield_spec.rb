@@ -34,4 +34,28 @@ describe "CustomAttributes::Textfield" do
         entry.destroy }.to change(CustomAttributes::Textfield, :count).from(1).to(0)
     end
   end 
+
+  context "validating" do
+    before :each do
+      @entry = attr_holder
+    end
+
+    it "empty is valid if not required" do  
+      @entry.custom_attributes_populate
+      expect(@entry.custom_attributes[0]).to be_valid
+    end
+
+    it "empty is not valid if required" do  
+      @custom_field.update_attribute(:required,true)
+      @entry.custom_attributes_populate
+      expect(@entry.custom_attributes[0]).not_to be_valid
+    end
+
+    it "valid with a value if required" do  
+      @custom_field.update_attribute(:required,true)
+      @entry.custom_attributes_populate
+      @entry.custom_attributes[0].custom_value.value= "something"
+      expect(@entry.custom_attributes[0]).to be_valid
+    end
+  end
 end

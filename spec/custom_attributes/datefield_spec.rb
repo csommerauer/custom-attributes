@@ -25,9 +25,12 @@ describe "CustomAttributes::Datefield" do
     end
 
     it "should raise error for strings not representing a date" do
+      # a invalid date string is set to 0 therefore use anything else than a string or a valid date
       CustomAttributes::Datefield.count.should eql 0
+      ca = attr_holder.custom_attributes.build(:custom_attribute_field_id=>@custom_field.id,:custom_value_attributes=>{:value=>''})
+      ca.custom_value.value=1
       expect {
-       attr_holder.custom_attributes.create!(:custom_attribute_field_id=>@custom_field.id, :custom_value_attributes=>{:value=>"xxxyyy"}) 
+        ca.save!
       }.to raise_error
     end
   end
@@ -38,4 +41,28 @@ describe "CustomAttributes::Datefield" do
       expect {entry.destroy}.to change CustomAttributes::Datefield, :count
     end
   end
-end
+
+  context "validation" do
+    before :each do
+      @entry = attr_holder
+    end
+
+    it "empty is valid if not required" do  
+      @entry.custom_attributes_populate
+      expect(@entry.custom_attributes[0]).to be_valid
+    end
+
+    it "empty is not valid if required" do  
+      @custom_field.update_attribute(:required,true)
+      @entry.custom_attributes_populate
+      expect(@entry.custom_attributes[0]).not_to be_valid
+    end
+
+    it "valid with a value if required" do  
+      @custom_field.update_attribute(:required,true)
+      @entry.custom_attributes_populate
+      @entry.custom_attributes[0].custom_value.value= Date.today
+      expect(@entry.custom_attributes[0]).to be_valid
+    end
+  end
+ end
