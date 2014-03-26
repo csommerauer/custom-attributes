@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'rails'
+require 'paperclip'
 
 describe "CustomAttributes::Filefield" do 
 
@@ -12,6 +13,10 @@ describe "CustomAttributes::Filefield" do
       @custom_field = config_holder.custom_attribute_fields.create!(:name=>"file", :field_type=>"filefield")
       @file = File.new("#{RSPEC_ROOT}/fixtures/files/car.jpg")
     end
+
+  after :each do
+    CustomAttributes::Filefield.destroy_all
+  end
 
   context "instance creation" do
 
@@ -29,7 +34,24 @@ describe "CustomAttributes::Filefield" do
       entry = attr_holder.custom_attributes.create!(:custom_attribute_field_id=>@custom_field.id, :custom_value_attributes=>{:attachment=>@file})
       expect {entry.destroy}.to change CustomAttributes::Filefield, :count
     end
-  end 
+  end
+
+  context "Paperclip token" do
+    it "has a #token method" do
+      expect(CustomAttributes::Filefield.new).to respond_to :token
+    end
+
+    it "is nil on new" do
+      expect(CustomAttributes::Filefield.new.token).to  eql nil
+    end
+
+    it "is changes to a random number" do
+      new_field = CustomAttributes::Filefield.new
+      new_field.valid?
+      expect(new_field.token.length).to be 32
+    end
+
+  end
 
   context "validating" do
     before :each do

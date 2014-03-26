@@ -3,10 +3,17 @@ require 'country_select'
 
 module CustomAttributes
   class Railtie < Rails::Railtie	
-    #initializer "custom_attributes.view_helpers" do |app|
+   
     config.to_prepare do
       ActionView::Base.send :include, ViewHelpers
-#      ActionView::Base.send :include, Mapper::ViewHelpers
+
+      if Pathname("#{Rails.root}/config/custom_attributes_paperclip.yml").exist?
+        Filefield.class_eval do 
+          has_attached_file :attachment, 
+            YAML.load_file("#{Rails.root}/config/custom_attributes_paperclip.yml")[Rails.env].try(:symbolize_keys) || {}
+        end
+      end
+
     end
   end
 end

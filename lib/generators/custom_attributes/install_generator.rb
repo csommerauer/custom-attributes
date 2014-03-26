@@ -17,7 +17,8 @@ module CustomAttributes
         'create_custom_attributes_textfields_table',
         'create_custom_attributes_textareas_table',
         'create_custom_attributes_datefields_table',
-        'create_custom_attributes_filefields_paperclip_table'
+        'create_custom_attributes_filefields_paperclip_table',
+        'add_token_to_custom_attributes_filefield'
       ]
 
       def create_migration_file

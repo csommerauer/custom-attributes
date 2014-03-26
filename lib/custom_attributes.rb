@@ -3,6 +3,7 @@ require 'active_record'
 require 'paperclip'
 
 require "custom_attributes/mapper"
+require "custom_attributes/paperclip_overrides"
 require "custom_attributes/active_record/core"
 require "custom_attributes/active_record/field"
 require "custom_attributes/active_record/entry"

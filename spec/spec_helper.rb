@@ -3,7 +3,7 @@ require 'database_cleaner'
 require 'pry'
 
 RSPEC_ROOT = File.dirname(__FILE__)
-PAPERCLIP_PATH = "#{RSPEC_ROOT}/support/temp/:id_:filename"
+PAPERCLIP_PATH = "#{RSPEC_ROOT}/support/temp:url"
 
 RSpec.configure do |config|
 
