@@ -11,7 +11,8 @@ module CustomAttributes
 
     #validates :value, :presence =>true, :if => "entry.present? && entry.required"
     validates_attachment_presence :attachment, :if => :entry_present_and_required?
-
+    do_not_validate_attachment_file_type :attachment
+    
     before_validation :create_token, :on => :create
 
     private 
