@@ -43,7 +43,11 @@ module CustomAttributes
         custom_value.attachment
       else
         custom_value.value
-      end
+      end if custom_value
+    end
+
+    def label
+      name.humanize
     end
 
     protected
