@@ -22,9 +22,11 @@ module CustomAttributes
       case custom_attribute.custom_attribute_field.field_type
       when "textfield" then custom_attribute.value
       when "textarea"  then h(custom_attribute.value).gsub("\n", "<br/>" ).html_safe
-      when "datefield" then custom_attribute.value.strftime("%d/%m/%Y")
-      when "filefield" then link_to "Link to Document", custom_attribute.value.url
-      end
+      when "datefield" 
+        custom_attribute.value.strftime("%d/%m/%Y") unless custom_attribute.value.nil?
+      when "filefield"
+        link_to("Link to Document", custom_attribute.value.url, :target=>:_blank) if custom_attribute.custom_value.attachment.exists?
+      end || ""
     end    
   end
 end

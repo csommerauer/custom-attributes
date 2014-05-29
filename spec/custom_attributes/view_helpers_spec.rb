@@ -39,6 +39,11 @@ describe 'CustomAttributes::ViewHelpers' do
     it "#custom_attribute_html replaces CR with </br> " do
       custom_attribute_html(@textarea).should eql "some text<br/>with newline"
     end
+
+    it "#custom_attribute_html returns nil if value is empty" do
+      @textarea.custom_value.value = nil
+      custom_attribute_html(@textarea).should eql ""
+    end    
   end
 
   describe "datefield" do
@@ -51,6 +56,11 @@ describe 'CustomAttributes::ViewHelpers' do
     it "#custom_attribute_html returns date in dd/mm/YY" do
       custom_attribute_html(@datefield).should eql Date.today.strftime("%d/%m/%Y")
     end
+
+    it "#custom_attribute_html returns nil if value is empty" do
+      @datefield.custom_value.value = nil
+      custom_attribute_html(@datefield).should eql ""
+    end    
   end
 
   describe "filefield" do
@@ -68,6 +78,11 @@ describe 'CustomAttributes::ViewHelpers' do
     it "#custom_attribute_html returns a link" do
       custom_attribute_html(@filefield).should eql %Q{<a href="#{@filefield.value.url}">Link to Document</a>}
     end
+
+    it "#custom_attribute_html returns nil if value is empty" do
+      @filefield.custom_value.attachment = nil
+      custom_attribute_html(@filefield).should eql ""
+    end    
   end 
 
 
