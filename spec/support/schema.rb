@@ -54,4 +54,9 @@ ActiveRecord::Schema.define do
     t.datetime "attachment_updated_at"
     t.string :token
   end
+
+  create_table :custom_attribute_checkboxes, :force=>true do |t|
+    t.boolean :value
+    t.timestamps
+  end
 end

@@ -6,7 +6,8 @@ module CustomAttributes
         "country_select" => "CustomAttributes::Textfield",
         "textarea" => "CustomAttributes::Textarea",
         "datefield" => "CustomAttributes::Datefield",
-        "filefield" => "CustomAttributes::Filefield"
+        "filefield" => "CustomAttributes::Filefield",
+        "checkbox" => "CustomAttributes::Checkbox"
       }
 
       def self.available_fields

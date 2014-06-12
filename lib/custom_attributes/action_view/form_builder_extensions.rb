@@ -51,6 +51,7 @@ module ActionView
           when "textfield"      then self.text_field :value, {:"data-custom-attribute-type"=>"string"}.merge(options)
           when "datefield"      then self.text_field :value, {:"data-custom-attribute-type"=>"date"}.merge(options)
           when "textarea"       then self.text_area :value,  {:"data-custom-attribute-type"=>"text"}.merge(options)
+          when "checkbox"       then self.check_box :value,  {:"data-custom-attribute-type"=>"boolean"}.merge(options)  
           when "country_select" then self.country_select :value, ["Select your country"], {:"data-custom-attribute-type"=>"text"}.merge(options)
           end
         end

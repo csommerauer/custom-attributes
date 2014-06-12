@@ -21,6 +21,7 @@ module CustomAttributes
     def custom_attribute_html(custom_attribute)
       case custom_attribute.custom_attribute_field.field_type
       when "textfield" then custom_attribute.value
+      when "checkbox" then custom_attribute.value ? "Yes" : "No"
       when "textarea"  then h(custom_attribute.value).gsub("\n", "<br/>" ).html_safe
       when "datefield" 
         custom_attribute.value.strftime("%d/%m/%Y") unless custom_attribute.value.nil?

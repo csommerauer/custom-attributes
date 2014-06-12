@@ -25,6 +25,24 @@ describe 'CustomAttributes::ViewHelpers' do
     end
   end
 
+
+  describe "checkbox" do
+    before :each do
+      @custom_attribute = config_holder.custom_attribute_fields.create!(:name=>"testfield", :field_type=>"checkbox")
+      @checkbox = attr_holder.custom_attributes.create(:custom_attribute_field_id=>@custom_attribute.id, :custom_value_attributes=>{:value=>true})
+    end
+      
+    it "#custom_attribute_html returns 'Yes' for true"  do
+      checkbox = attr_holder.custom_attributes.create(:custom_attribute_field_id=>@custom_attribute.id, :custom_value_attributes=>{:value=>true})
+      custom_attribute_html(checkbox).should eql "Yes"
+    end
+
+    it "#custom_attribute_html returns 'No' for true"  do
+      checkbox = attr_holder.custom_attributes.create(:custom_attribute_field_id=>@custom_attribute.id, :custom_value_attributes=>{:value=>false})
+      custom_attribute_html(checkbox).should eql "No"
+    end
+  end
+
   describe "textarea" do
     before :each do
       @custom_attribute = config_holder.custom_attribute_fields.create!(:name=>"testfield", :field_type=>"textarea")
@@ -76,7 +94,7 @@ describe 'CustomAttributes::ViewHelpers' do
     end
       
     it "#custom_attribute_html returns a link" do
-      custom_attribute_html(@filefield).should eql %Q{<a href="#{@filefield.value.url}">Link to Document</a>}
+      custom_attribute_html(@filefield).should eql %Q{<a href="#{@filefield.value.url}" target="_blank">Link to Document</a>}
     end
 
     it "#custom_attribute_html returns nil if value is empty" do

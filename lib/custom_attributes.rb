@@ -11,6 +11,7 @@ require "custom_attributes/active_record/textfield"
 require "custom_attributes/active_record/textarea"
 require "custom_attributes/active_record/datefield"
 require "custom_attributes/active_record/filefield"
+require "custom_attributes/active_record/checkbox"
 
 require "custom_attributes/action_view/form_builder_extensions"
 
