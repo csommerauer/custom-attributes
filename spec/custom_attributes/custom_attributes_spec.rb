@@ -52,6 +52,39 @@ describe "CustomAttributes" do
       end
     end
 
+    context "#custom_attributes_hash" do
+      before :each do
+        @custom_attribute = config_holder.custom_attribute_fields.create!(:name=>"testfield", :field_type=>"textfield")
+      end
+      
+      it "exists" do
+        expect(attr_holder).to respond_to :custom_attributes_hash
+      end
+
+      it "returns empty hash if no custom attributes been added" do
+        attr_holder.custom_attributes_hash.should == {}
+      end
+
+      it "creates the instance_variable @ca_hash when called" do
+        ah = attr_holder
+        ah.instance_variable_defined?(:@ca_hash).should be_false
+        ah.custom_attributes_hash
+        ah.instance_variable_get(:@ca_hash).should == {}
+      end
+
+      it "returns empty hash if no custom attributes been added" do
+        attr_holder.custom_attributes_hash.should == {}
+      end
+
+      it "returns hash with the custom attributes as entry and the name as the key" do
+        entry = attr_holder.custom_attributes.create(:custom_attribute_field_id=>@custom_attribute.id)
+        attr_holder.custom_attributes_hash.has_key?(@custom_attribute.name).should be_true
+        attr_holder.custom_attributes_hash[@custom_attribute.name].should equal entry
+      end
+
+
+    end
+
     context "saving entries using nested attributes" do
       before :each do
         @custom_attribute = config_holder.custom_attribute_fields.create!(:name=>"testfield", :field_type=>"textfield")

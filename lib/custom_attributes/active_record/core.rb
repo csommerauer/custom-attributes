@@ -104,6 +104,17 @@ module CustomAttributes
         custom_attribute.explicitly_build_custom_value
         custom_attribute
       end
+
+      def custom_attributes_hash
+        if instance_variable_defined?(:@ca_hash)
+          @ca_hash
+        else
+          @ca_hash = custom_attributes.inject({}) do |h, ca|
+            h[ca.name] = ca
+            h
+          end 
+        end
+      end
     end
   end
  
