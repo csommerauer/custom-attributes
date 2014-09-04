@@ -14,7 +14,7 @@ module ActionView
           self.hidden_field(:id) +
           self.hidden_field(:custom_attribute_field_id) + 
           self.custom_attribute_custom_value_tag(options)
-        end.html_safe
+        end.try(:html_safe)
       end
 
       def custom_attribute_label_tag(options={})
@@ -36,7 +36,7 @@ module ActionView
           else
             iform.form_element_custom_value(self.object.custom_attribute_field.field_type, options)
           end
-        end.html_safe
+        end.try(:html_safe)
       end
 
       def custom_attribute_is_a?(field_type)
