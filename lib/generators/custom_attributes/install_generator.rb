@@ -19,7 +19,8 @@ module CustomAttributes
         'create_custom_attributes_datefields_table',
         'create_custom_attributes_filefields_paperclip_table',
         'add_token_to_custom_attributes_filefield',
-        'create_custom_attributes_checkboxes_table'
+        'create_custom_attributes_checkboxes_table',
+        'add_unique_index_to_custom_attributes_entries'
       ]
 
       def create_migration_file
