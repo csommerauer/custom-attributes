@@ -3,6 +3,8 @@ module CustomAttributes
   class Entry < ActiveRecord::Base
     self.table_name="custom_attribute_entries"
 
+    default_scope -> { select("#{self.table_name}.*").joins(:custom_attribute_field).order("#{CustomAttributes::Field.table_name}.position ASC") }
+
     belongs_to :custom_attributable, :polymorphic => true
     delegate :custom_attribute_fields, :to=> :custom_attributable, :prefix=>false
 

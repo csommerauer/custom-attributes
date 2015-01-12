@@ -2,6 +2,9 @@ module CustomAttributes
   
   class Field < ActiveRecord::Base
     self.table_name="custom_attribute_fields"
+
+    default_scope -> { order("position ASC") }
+
     belongs_to :custom_configurable, :polymorphic => true
     has_many :custom_attribute_entries, :class_name => "CustomAttributes::Entry", :foreign_key=> :custom_attribute_field_id, :dependent=> :destroy
 
